@@ -1,7 +1,10 @@
 package com.jruivodev.mypokedex;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,10 +26,21 @@ public class PokemonActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon);
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
 
-        LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(POKEMON_LOADER, null, this);
+        ConnectivityManager connMngr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMngr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+
+            LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(POKEMON_LOADER, null, this);
+        } else {
+            View loadingIndicator = findViewById(R.id.loading_indicator);
+            loadingIndicator.setVisibility(View.GONE);
+            mEmptyStateTextView.setText("No Internet Connection");
+
+        }
 
 
         ListView listView = (ListView) findViewById(R.id.list_view);
@@ -35,9 +49,7 @@ public class PokemonActivity extends AppCompatActivity implements LoaderManager.
 
 
         //Setting the empty view
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         listView.setEmptyView(mEmptyStateTextView);
-
     }
 
     @Override
@@ -46,16 +58,16 @@ public class PokemonActivity extends AppCompatActivity implements LoaderManager.
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Pokemon>> loader, List<Pokemon> data) {
+    public void onLoadFinished(Loader<List<Pokemon>> loader, List<Pokemon> pokemons) {
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
 
         mEmptyStateTextView.setText("No pokemons found.");
 
         mAdapter.clear();
-        if (data != null && !data.isEmpty())
-            mAdapter.addAll(data);
-
+        if (pokemons != null && !pokemons.isEmpty()) {
+            mAdapter.addAll(pokemons);
+        }
     }
 
     @Override

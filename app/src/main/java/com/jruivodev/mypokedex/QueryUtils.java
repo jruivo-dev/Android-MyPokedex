@@ -146,7 +146,6 @@ public class QueryUtils {
             e.printStackTrace();
         }
 
-
         Pokemon pokemon = new Pokemon(name, spriteUrl);
         return pokemon;
     }

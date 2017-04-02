@@ -36,14 +36,16 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> {
         }
         Pokemon currentPokemon = getItem(position);
 
-        TextView nameView = (TextView) listRow.findViewById(R.id.name_view);
-        nameView.setText(currentPokemon.getName());
+        if (currentPokemon != null) {
+            TextView nameView = (TextView) listRow.findViewById(R.id.name_view);
+            nameView.setText(currentPokemon.getName());
 
 // show The Image in a ImageView
-        new DownloadImageTask((ImageView) listRow.findViewById(R.id.image_view))
-                .execute(currentPokemon.getSpriteUrl());
-
+            new DownloadImageTask((ImageView) listRow.findViewById(R.id.image_view))
+                    .execute(currentPokemon.getSpriteUrl());
+        }
         return listRow;
+
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
