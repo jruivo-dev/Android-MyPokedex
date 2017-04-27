@@ -1,6 +1,6 @@
-# Android-MyPokedex
+# Android-MyPokedex [Under Development]
 A very simple pokedex version I made, using Pokéapi, The RESTful Pokemon API.
-Displays their name and their picture. For now.
+Displays their name and their picture. For now. 
 
 
 <p align="center">
